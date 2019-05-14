@@ -42,19 +42,19 @@
 
           <router-link
             v-for="item in menuItems"
-            :key="item.menuButtonTranslationId"
+            :key="item.meta.sidebar.menuButtonTranslationId"
             v-ripple
             class="sidebar__link"
             @click.native="closeSidebar"
-            :to="item.routerEntry.path"
+            :to="item.path"
             tag="a"
           >
             <i
               class="sidebar__link-icon"
-              :class="`mdi mdi-${item.menuButtonMdiName}`"
+              :class="`mdi mdi-${item.meta.sidebar.menuButtonMdiName}`"
             />
             <span>
-              {{ item.menuButtonTranslationId | globalize }}
+              {{ item.meta.sidebar.menuButtonTranslationId | globalize }}
             </span>
           </router-link>
         </nav>
@@ -77,7 +77,6 @@ import { vuexTypes } from '@/vuex'
 import { mapGetters } from 'vuex'
 
 import config from '@/config'
-import { SchemeRegistry } from '@/modules-arch/scheme-registry'
 
 const DEFAULT_SECTION_NAME = 'default'
 
@@ -102,7 +101,8 @@ export default {
     }),
 
     sectionsToRender () {
-      const sections = this.groupPagesBySections(SchemeRegistry.current.pages)
+      const pages = this.getPagesFlattenDeep(this.$router.options.routes)
+      const sections = this.groupPagesBySections(pages)
       const filteredSections = this.filterUnrenderedSections(sections)
       return filteredSections
     },
@@ -117,11 +117,27 @@ export default {
       this.isOpened = false
     },
 
+    getPagesFlattenDeep (routes) {
+      let result = []
+
+      for (const item of routes) {
+        if (Object.keys((item.meta || {}).sidebar || {}).length) {
+          result.push(item)
+        }
+
+        if (item.children) {
+          result = result.concat(this.getPagesFlattenDeep(item.children))
+        }
+      }
+
+      return result
+    },
+
     groupPagesBySections (pages) {
       const result = { [DEFAULT_SECTION_NAME]: [] }
 
       for (const item of pages) {
-        const translationId = item.menuSectionTranslationId
+        const translationId = item.meta.sidebar.menuSectionTranslationId
         if (!translationId) {
           result[DEFAULT_SECTION_NAME].push(item)
         } else {
@@ -140,8 +156,9 @@ export default {
 
       for (const [key, value] of Object.entries(result)) {
         const filteredValue = value
-          .filter(item => item.menuButtonTranslationId)
-          .filter(item => item.isAccessible)
+          .filter(item => item.meta.sidebar.menuButtonTranslationId)
+        // TODO:
+        // .filter(item => item.isAccessible)
 
         if (filteredValue.length) {
           result[key] = filteredValue
@@ -269,14 +286,6 @@ $content-item-right-padding: 2.4rem;
   width: 100%;
   height: 3.1rem;
   display: block;
-}
-
-.sidebar__scheme-label {
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  font-weight: 700;
-  letter-spacing: 0.08rem;
-  color: $col-sidebar-scheme-label;
 }
 
 .sidebar__links-section {

@@ -13,8 +13,6 @@ export function buildRouter (store) {
   // TODO: find a way to rebuild router’s routes.
   // Because would be nice if we do not even build routes that the logged in
   // user cannot access
-  const userRoutes = SchemeRegistry.current.pages
-    .map(page => page.routerEntry)
 
   return new Router({
     mode: 'history',
@@ -90,9 +88,12 @@ export function buildRouter (store) {
           scheme: SchemeRegistry.current,
           store,
         }),
-        redirect: userRoutes[0],
+        // TODO: redirect sanity check
+        // TODO: featureWhiteList name sanity check
+        // TODO: meta structure sanity check
+        // TODO: isCorporateOnly calc
+        redirect: vueRoutes.dashboard,
         children: [
-          ...userRoutes,
           {
             path: '/dashboard',
             name: vueRoutes.dashboard.name,
