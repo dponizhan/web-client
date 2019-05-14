@@ -31,17 +31,17 @@ export function buildRouter (store) {
       {
         path: '/terms',
         name: vueRoutes.terms.name,
-        component: resolve => require(['@/vue/pages/Terms'], resolve),
+        component: _ => import('@/vue/pages/Terms'),
       },
       {
         path: '/downloads',
         name: vueRoutes.downloads.name,
-        component: resolve => require(['@/vue/pages/Downloads'], resolve),
+        component: _ => import('@/vue/pages/Downloads'),
       },
       {
         path: '/ios-installation-guide',
         name: vueRoutes.iosInstallationGuide.name,
-        component: resolve => require(['@/vue/pages/IosInstallationGuide'], resolve),
+        component: _ => import('@/vue/pages/IosInstallationGuide'),
       },
       {
         path: '/pre-issuance-guide',
@@ -52,31 +52,31 @@ export function buildRouter (store) {
         path: '/auth',
         name: vueRoutes.auth.name,
         redirect: vueRoutes.login,
-        component: resolve => require(['@/vue/pages/Auth'], resolve),
+        component: _ => import('@/vue/pages/Auth'),
         children: [
           {
             path: '/sign-in',
             name: vueRoutes.login.name,
-            component: resolve => require(['@/vue/pages/Login'], resolve),
+            component: _ => import('@/vue/pages/Login'),
             beforeEnter: buildAuthPageGuard(store),
           },
           {
             path: '/sign-up',
             name: vueRoutes.signup.name,
-            component: resolve => require(['@/vue/pages/Signup'], resolve),
+            component: _ => import('@/vue/pages/Signup'),
             beforeEnter: buildAuthPageGuard(store),
           },
           {
             path: '/verify/:paramsBase64',
             name: vueRoutes.verify.name,
-            component: resolve => require(['@/vue/pages/Verify'], resolve),
+            component: _ => import('@/vue/pages/Verify'),
             beforeEnter: buildAuthPageGuard(store),
             props: true,
           },
           {
             path: '/recovery',
             name: vueRoutes.recovery.name,
-            component: resolve => require(['@/vue/pages/Recovery'], resolve),
+            component: _ => import('@/vue/pages/Recovery'),
             beforeEnter: buildAuthPageGuard(store),
           },
         ],
@@ -85,7 +85,7 @@ export function buildRouter (store) {
         path: '/',
         name: 'app',
         meta: { isNavigationRendered: true },
-        component: resolve => require(['@/vue/AppContent'], resolve),
+        component: _ => import('@/vue/AppContent'),
         beforeEnter: buildInAppRouteGuard({
           scheme: SchemeRegistry.current,
           store,
