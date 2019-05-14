@@ -2,7 +2,6 @@ import { vueRoutes } from '@/vue-router/routes'
 
 import { MovementsHistoryModule } from '@modules/movements-history/module'
 import { MovementsHistoryPageModule } from '@/vue/pages/movements-page-module'
-import { DashboardPageModule } from '@/vue/pages/dashboard-page-module'
 import { FeesPageModule } from '@/vue/pages/fees-page-module'
 import { FeesModule } from '@modules/fees/module'
 import { IssuancePageModule } from '@/vue/pages/issuance-page-module'
@@ -55,26 +54,6 @@ import { VerificationGeneralFormModule } from '@/vue/modules/verification/genera
 
 export default {
   pages: [
-    new DashboardPageModule(
-      {
-        routerEntry: {
-          path: '/dashboard',
-          name: vueRoutes.dashboard.name,
-          meta: { pageNameTranslationId: 'pages-names.dashboard' },
-        },
-        menuButtonTranslationId: 'pages-names.dashboard',
-        menuButtonMdiName: 'view-dashboard',
-        submodules: [
-          new MovementsHistoryModule(),
-          new IssuanceFormModule({
-            isCorporateOnly: true,
-          }),
-          new TransferDrawerPseudoModule(),
-          new DashboardChartPseudoModule(),
-        ],
-      },
-    ),
-
     new MovementsHistoryPageModule(
       {
         routerEntry: {
