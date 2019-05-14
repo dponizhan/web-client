@@ -140,61 +140,39 @@ describe('Dashboard component', () => {
       mountComponentWithSpecifiedAccountBalances(mockedAccountBalances)
     })
 
-    describe('createIssuanceFormIsShown()', () => {
+    describe('isIssuanceFormShown()', () => {
       it('apply "true" value', async () => {
-        wrapper.vm.createIssuanceFormIsShown = true
+        wrapper.vm.isIssuanceFormShown = true
 
         await localVue.nextTick()
 
-        expect(wrapper.vm.showDrawer).to.be.true
+        expect(wrapper.vm.isIssuanceFormShown).to.be.true
       })
 
       it('apply "false" value', async () => {
-        wrapper.vm.createIssuanceFormIsShown = false
+        wrapper.vm.isIssuanceFormShown = false
 
         await localVue.nextTick()
 
-        expect(wrapper.vm.showDrawer).to.be.false
+        expect(wrapper.vm.isIssuanceFormShown).to.be.false
       })
     })
 
-    describe('transferFormIsShown()', () => {
+    describe('isTransferFormShown()', () => {
       it('apply "true" value', async () => {
-        wrapper.vm.transferFormIsShown = true
+        wrapper.vm.isTransferFormShown = true
 
         await localVue.nextTick()
 
-        expect(wrapper.vm.showDrawer).to.be.true
+        expect(wrapper.vm.isTransferFormShown).to.be.true
       })
 
       it('apply "false" value', async () => {
-        wrapper.vm.transferFormIsShown = false
+        wrapper.vm.isTransferFormShown = false
 
         await localVue.nextTick()
 
-        expect(wrapper.vm.showDrawer).to.be.false
-      })
-    })
-
-    describe('showDrawer()', () => {
-      it('apply "true" value', async () => {
-        wrapper.vm.showDrawer = true
-
-        await localVue.nextTick()
-
-        expect(wrapper.vm.createIssuanceFormIsShown)
-          .to.equal(wrapper.vm.createIssuanceFormIsShown)
-        expect(wrapper.vm.transferFormIsShown)
-          .to.equal(wrapper.vm.transferFormIsShown)
-      })
-
-      it('apply "false" value', async () => {
-        wrapper.vm.showDrawer = false
-
-        await localVue.nextTick()
-
-        expect(wrapper.vm.createIssuanceFormIsShown).to.be.false
-        expect(wrapper.vm.transferFormIsShown).to.be.false
+        expect(wrapper.vm.isTransferFormShown).to.be.false
       })
     })
   })

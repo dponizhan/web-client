@@ -91,7 +91,27 @@ export function buildRouter (store) {
           store,
         }),
         redirect: userRoutes[0],
-        children: userRoutes,
+        children: [
+          ...userRoutes,
+          {
+            path: '/dashboard',
+            name: vueRoutes.dashboard.name,
+            component: _ => import('@/vue/pages/Dashboard'),
+            meta: {
+              pageNameTranslationId: 'pages-names.dashboard',
+              featureWhiteList: [
+                { name: 'reg.db.issuance-form', options: { isCorporateOnly: true } },
+                { name: 'reg.db.transfer-form' },
+                { name: 'reg.db.chart' },
+                { name: 'reg.db.latest-activity' },
+              ],
+              sidebar: {
+                menuButtonTranslationId: 'pages-names.dashboard',
+                menuButtonMdiName: 'view-dashboard',
+              },
+            },
+          },
+        ],
       },
     ],
     scrollBehavior: _ => ({ x: 0, y: 0 }),

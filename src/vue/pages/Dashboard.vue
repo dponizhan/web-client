@@ -8,86 +8,90 @@
           @asset-change="setCurrentAsset"
           :scale="scale"
         />
+
         <div class="dashboard__actions">
-          <!-- eslint-disable-next-line max-len -->
-          <template v-if="getModule().canRenderSubmodule(IssuanceFormModule)">
+          <template v-if="isComponentAllowed('reg.db.issuance-form')">
             <button
               class="app__button-raised dashboard__action"
-              @click="createIssuanceFormIsShown = true"
+              @click="isIssuanceFormShown = true"
             >
               <i class="mdi mdi-plus dashboard__plus-icon" />
               {{ 'dashboard.create-issuance-btn' | globalize }}
             </button>
           </template>
 
-          <!-- eslint-disable-next-line max-len -->
-          <template v-if="getModule().canRenderSubmodule(TransferDrawerPseudoModule)">
+          <template v-if="isComponentAllowed('reg.db.transfer-form')">
             <button
               v-if="currentAsset"
               class="app__button-raised dashboard__action"
-              @click="transferFormIsShown = true"
+              @click="isTransferFormShown = true"
             >
               <i class="mdi mdi-send mdi-rotate-315 dashboard__send-icon" />
-              {{
-                'dashboard.send-asset-lbl' | globalize({ asset: currentAsset })
-              }}
+              <!-- eslint-disable-next-line max-len -->
+              {{ 'dashboard.send-asset-lbl' | globalize({ asset: currentAsset }) }}
             </button>
           </template>
+          <drawer :is-shown.sync="isTransferFormShown">
+            <template slot="heading">
+              {{ 'transfer-form.form-heading' | globalize }}
+            </template>
+
+            <transfer-form
+              @operation-submitted="updateBalancesAndList()"
+              :asset-to-transfer="currentAsset"
+            />
+          </drawer>
         </div>
       </div>
+
       <template v-if="currentAsset">
-        <div
-          v-if="currentAsset !== defaultQuoteAsset &&
-            getModule().getSubmodule(DashboardChartPseudoModule)
-          "
-          class="dashboard__chart"
-        >
-          <submodule-importer
-            :submodule="getModule().getSubmodule(DashboardChartPseudoModule)"
-            :base-asset="currentAsset"
-            :quote-asset="defaultQuoteAsset"
-          />
-        </div>
-        <div
-          class="dashboard__activity"
-          v-if="getModule().canRenderSubmodule(MovementsHistoryModule) &&
-            currentAsset
-          "
-        >
-          <submodule-importer
-            :submodule="getModule().getSubmodule(MovementsHistoryModule)"
-            :asset-code="currentAsset"
-            :ref="REFS.movementsHistory"
-            :latest-activity="true"
-          />
-        </div>
+        <template v-if="isComponentAllowed('reg.db.chart')">
+          <div
+            v-if="currentAsset !== defaultQuoteAsset"
+            class="dashboard__chart"
+          >
+            <chart
+              :base-asset="currentAsset"
+              :quote-asset="defaultQuoteAsset"
+            />
+          </div>
+        </template>
+
+        <template v-if="isComponentAllowed('reg.db.latest-activity')">
+          <div class="dashboard__activity">
+            <movements-history
+              :asset-code="currentAsset"
+              :ref="REFS.movementsHistory"
+              :latest-activity="true"
+            />
+          </div>
+        </template>
       </template>
 
-      <drawer :is-shown.sync="showDrawer">
-        <template
-          v-if="createIssuanceFormIsShown &&
-            getModule().canRenderSubmodule(IssuanceFormModule)"
-        >
+      <template v-if="isComponentAllowed('reg.db.issuance-form')">
+        <drawer :is-shown.sync="isIssuanceFormShown">
           <template slot="heading">
             {{ 'dashboard.create-issuance-title' | globalize }}
           </template>
 
-          <submodule-importer
-            :submodule="getModule().getSubmodule(IssuanceFormModule)"
-            @issuance-created="showDrawer = false"
-          />
-        </template>
+          <issuance-form @issuance-created="isIssuanceFormShown = false" />
+        </drawer>
+      </template>
 
-        <template v-if="transferFormIsShown">
+      <template v-if="isComponentAllowed('reg.db.transfer-form')">
+        <drawer :is-shown.sync="isTransferFormShown">
           <template slot="heading">
             {{ 'transfer-form.form-heading' | globalize }}
           </template>
-          <transfer
-            @operation-submitted="updateBalancesAndList()"
+
+          <transfer-form
+            @operation-submitted="(isTransferFormShown = false) ||
+              updateBalancesAndList()
+            "
             :asset-to-transfer="currentAsset"
           />
-        </template>
-      </drawer>
+        </drawer>
+      </template>
     </template>
 
     <template v-else>
@@ -97,19 +101,10 @@
 </template>
 
 <script>
-import AssetSelector from '@/vue/pages/dashboard/Dashboard.AssetSelector.vue'
-import Transfer from '@/vue/forms/TransferForm'
-
 import { mapGetters, mapActions } from 'vuex'
 import { vuexTypes } from '@/vuex'
 import Loader from '@/vue/common/Loader'
 import Drawer from '@/vue/common/Drawer'
-import { MovementsHistoryModule } from '@/vue/modules/movements-history/module'
-import SubmoduleImporter from '@/modules-arch/submodule-importer'
-
-import { IssuanceFormModule } from '@/vue/modules/issuance-form/module'
-import { TransferDrawerPseudoModule } from '@/modules-arch/pseudo-modules/transfer-drawer-pseudo-module'
-import { DashboardChartPseudoModule } from '@/modules-arch/pseudo-modules/dashboard-chart-pseudo-module'
 
 const REFS = {
   movementsHistory: 'movements-history',
@@ -118,23 +113,20 @@ const REFS = {
 export default {
   name: 'dashboard',
   components: {
-    AssetSelector,
-    Transfer,
+    'asset-selector': _ => import('@/vue/pages/dashboard/Dashboard.AssetSelector'),
+    'chart': _ => import('@/vue/common/chart/Chart'),
+    'transfer-form': _ => import('@/vue/forms/TransferForm'),
+    'issuance-form': _ => import('@/vue/modules/issuance-form'),
+    'movements-history': _ => import('@/vue/modules/movements-history'),
     Loader,
     Drawer,
-    SubmoduleImporter,
   },
   data: () => ({
     currentAsset: null,
     isLoaded: false,
-    createIssuanceFormIsShown: false,
-    transferFormIsShown: false,
-    showDrawer: false,
+    isIssuanceFormShown: false,
+    isTransferFormShown: false,
     scale: 'day',
-    MovementsHistoryModule,
-    IssuanceFormModule,
-    TransferDrawerPseudoModule,
-    DashboardChartPseudoModule,
     REFS,
   }),
   computed: {
@@ -145,18 +137,6 @@ export default {
     ]),
   },
   watch: {
-    showDrawer (status) {
-      if (!status) {
-        this.createIssuanceFormIsShown = false
-        this.transferFormIsShown = false
-      }
-    },
-    createIssuanceFormIsShown (status) {
-      this.showDrawer = status
-    },
-    transferFormIsShown (status) {
-      this.showDrawer = status
-    },
     currentAsset (value) {
       this.$router.push({
         query: { asset: value },
@@ -183,13 +163,11 @@ export default {
       }
     },
 
-    // TODO: find a better way to execute child’s reload-list method
     updateList () {
       if (!this.$refs[REFS.movementsHistory]) {
         return
       }
-      return this.$refs[REFS.movementsHistory].$children[0]
-        .reloadCollectionLoader()
+      return this.$refs[REFS.movementsHistory].reloadCollectionLoader()
     },
 
     updateBalancesAndList () {
