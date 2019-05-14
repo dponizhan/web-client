@@ -78,6 +78,34 @@ export class ModuleScheme {
       return SchemeRegistry.current.cache
         .find(item => item.createdComponentUid === this._uid)
     }
+
+    Vue.prototype.isComponentAllowed = function (path) {
+      // TODO: refactor
+      function findRecursive (routes, criteriaCb) {
+        let found
+        for (const item of routes) {
+          found = ((item.meta || {}).featureWhiteList || []).find(criteriaCb)
+
+          if (!found && item.children) {
+            found = findRecursive(item.children, criteriaCb)
+          } else if (found) {
+            break
+          }
+        }
+        return found
+      }
+
+      try {
+        const res = findRecursive(
+          this.$router.options.routes,
+          item => item.name === path && item,
+        )
+        return Boolean(res)
+      } catch (error) {
+        console.error(error)
+        return false
+      }
+    }
   }
 
   findModuleByPath (path) {
