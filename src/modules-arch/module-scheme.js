@@ -81,6 +81,7 @@ export class ModuleScheme {
 
     Vue.prototype.isComponentAllowed = function (path) {
       // TODO: refactor
+      // TODO: add role (isCorporateOnly) check
       function findRecursive (routes, criteriaCb) {
         let found
         for (const item of routes) {
