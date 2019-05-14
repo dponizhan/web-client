@@ -27,12 +27,6 @@
         </router-link>
       </section>
 
-      <section class="sidebar__scheme-label-section">
-        <p class="sidebar__scheme-label">
-          {{ schemeLabel }}
-        </p>
-      </section>
-
       <section class="sidebar__links-section">
         <nav
           v-for="[sectionName, menuItems] of Object.entries(sectionsToRender)"
@@ -106,13 +100,11 @@ export default {
     ...mapGetters({
       isAccountCorporate: vuexTypes.isAccountCorporate,
     }),
+
     sectionsToRender () {
       const sections = this.groupPagesBySections(SchemeRegistry.current.pages)
       const filteredSections = this.filterUnrenderedSections(sections)
       return filteredSections
-    },
-    schemeLabel () {
-      return SchemeRegistry.current.sidebarLabel
     },
   },
 
@@ -277,10 +269,6 @@ $content-item-right-padding: 2.4rem;
   width: 100%;
   height: 3.1rem;
   display: block;
-}
-
-.sidebar__scheme-label-section {
-  padding: 1.6rem $content-item-right-padding 0 $content-item-left-padding;
 }
 
 .sidebar__scheme-label {
