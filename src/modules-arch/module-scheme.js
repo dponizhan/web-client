@@ -81,14 +81,13 @@ export class ModuleScheme {
 
     Vue.prototype.isComponentAllowed = function (path) {
       // TODO: refactor
-      // TODO: add role (isCorporateOnly) check
-      function findRecursive (routes, criteriaCb) {
+      function findFeature (routes, criteriaCb) {
         let found
         for (const item of routes) {
           found = ((item.meta || {}).featureWhiteList || []).find(criteriaCb)
 
           if (!found && item.children) {
-            found = findRecursive(item.children, criteriaCb)
+            found = findFeature(item.children, criteriaCb)
           } else if (found) {
             break
           }
@@ -96,10 +95,19 @@ export class ModuleScheme {
         return found
       }
 
+      const isAccessibleFeature = (feature) => {
+        const isAccountCorporate =
+          this.$store.getters[vuexTypes.isAccountCorporate]
+        if (((feature || {}).options || {}).isCorporateOnly) {
+          return isAccountCorporate
+        }
+        return true
+      }
+
       try {
-        const res = findRecursive(
+        const res = findFeature(
           this.$router.options.routes,
-          item => item.name === path && item,
+          item => item.name === path && isAccessibleFeature(item),
         )
         return Boolean(res)
       } catch (error) {
