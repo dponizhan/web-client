@@ -1,5 +1,6 @@
 import { PageModuleDescriptor } from './page-module-descriptor'
 import { SchemeRegistry } from './scheme-registry'
+import { vuexTypes } from '@/vuex/types'
 
 /**
  * Represents module set to be used by the application.
@@ -115,6 +116,28 @@ export class ModuleScheme {
         return false
       }
     }
+
+    Vue.mixin({
+      async created () {
+        const regFn = this.$options.registerStoreModule
+        if (regFn) {
+          const wpModule = await regFn()
+
+          const storeModule = Object.values(wpModule)
+            .find(item => item.name && item.namespaced)
+
+          if (!this.$store.state[storeModule.name]) {
+            this.$store.registerModule(storeModule.name, storeModule)
+          }
+
+          console.log('registered')
+        }
+      },
+    })
+
+    // Vue.prototype.registerStoreModule = function ({ name, ...storeModule }) {
+    //   this.$store.registerModule(name, storeModule)
+    // }
   }
 
   findModuleByPath (path) {

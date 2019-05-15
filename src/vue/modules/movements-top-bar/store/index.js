@@ -47,7 +47,7 @@ export const getters = {
     .filter(i => i.balance.id),
 }
 
-export const MovementsTopBarModule = {
+export default {
   name: 'movements-top-bar',
   namespaced: true,
   state,

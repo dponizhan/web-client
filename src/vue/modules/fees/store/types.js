@@ -14,4 +14,5 @@ export const types = {
   ...mutations,
   ...actions,
   ...getters,
+  namespace: 'fees',
 }

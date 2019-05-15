@@ -1,7 +1,9 @@
 import { vueRoutes } from '@/vue-router/routes'
 
-import { MovementsHistoryModule } from '@modules/movements-history/module'
-import { MovementsHistoryPageModule } from '@/vue/pages/movements-page-module'
+/* eslint-disable max-len */
+
+// import { MovementsHistoryModule } from '@modules/movements-history/module'
+// import { MovementsHistoryPageModule } from '@/vue/pages/movements-page-module'
 import { FeesPageModule } from '@/vue/pages/fees-page-module'
 import { FeesModule } from '@modules/fees/module'
 import { IssuancePageModule } from '@/vue/pages/issuance-page-module'
@@ -33,17 +35,17 @@ import { ChangePasswordPseudoModule } from '@/modules-arch/pseudo-modules/change
 import { ShowSeedPseudoModule } from '@/modules-arch/pseudo-modules/show-seed-pseudo-module'
 import { IssuanceFormModule } from '@/vue/modules/issuance-form/module'
 import { PreIssuanceFormModule } from '@/vue/modules/pre-issuance-form/module'
-import { TransferDrawerPseudoModule } from '@/modules-arch/pseudo-modules/transfer-drawer-pseudo-module'
+// import { TransferDrawerPseudoModule } from '@/modules-arch/pseudo-modules/transfer-drawer-pseudo-module'
 import { CreateSaleFormModule } from '@modules/create-sale-form/module'
 import { DashboardChartPseudoModule } from '@/modules-arch/pseudo-modules/dashboard-chart-pseudo-module'
 import { SalesListPageModule } from '@/vue/pages/sales/all-sales-page-module'
 import { SalesListOwnedPageModule } from '@/vue/pages/sales/user-owned-sales-page-module'
 import { SaleCampaignViewerPageModule } from '@/vue/pages/sale-details/sale-campaign-viewer-page-module'
 import { SaleStateWidgetModule } from '@/vue/pages/sale-details/sale-sate-widget-module'
-import { CoinpaymentsDepositModule } from '@/vue/modules/coinpayments-deposit/module'
-import { MovementsTopBarModule } from '@modules/movements-top-bar/module'
-import { WithdrawalDrawerPseudoModule } from '@/modules-arch/pseudo-modules/withdrawal-drawer-pseudo-module'
-import { DepositFormPseudoModule } from '@/modules-arch/pseudo-modules/deposit-form-pseudo-module'
+// import { CoinpaymentsDepositModule } from '@/vue/modules/coinpayments-deposit/module'
+// import { MovementsTopBarModule } from '@modules/movements-top-bar/module'
+// import { WithdrawalDrawerPseudoModule } from '@/modules-arch/pseudo-modules/withdrawal-drawer-pseudo-module'
+// import { DepositFormPseudoModule } from '@/modules-arch/pseudo-modules/deposit-form-pseudo-module'
 import { AssetExplorerPageModule } from '@/vue/pages/asset-explorer-page'
 import { BalancesPageModule } from '@/vue/pages/balances-page'
 import { AssetExplorerModule } from '@/vue/modules/assets/asset-explorer/module'
@@ -54,29 +56,29 @@ import { VerificationGeneralFormModule } from '@/vue/modules/verification/genera
 
 export default {
   pages: [
-    new MovementsHistoryPageModule(
-      {
-        routerEntry: {
-          path: '/movements',
-          name: vueRoutes.movements.name,
-          meta: { pageNameTranslationId: 'pages-names.movements' },
-        },
-        menuButtonTranslationId: 'pages-names.movements',
-        menuButtonMdiName: 'menu',
-        submodules: [
-          new MovementsHistoryModule(),
-          new MovementsTopBarModule({
-            submodules: [
-              new WithdrawalDrawerPseudoModule(),
-              new DepositFormPseudoModule({
-                submodules: [new CoinpaymentsDepositModule()],
-              }),
-              new TransferDrawerPseudoModule(),
-            ],
-          }),
-        ],
-      },
-    ),
+    // new MovementsHistoryPageModule(
+    //   {
+    //     routerEntry: {
+    //       path: '/movements',
+    //       name: vueRoutes.movements.name,
+    //       meta: { pageNameTranslationId: 'pages-names.movements' },
+    //     },
+    //     menuButtonTranslationId: 'pages-names.movements',
+    //     menuButtonMdiName: 'menu',
+    //     submodules: [
+    //       new MovementsHistoryModule(),
+    //       new MovementsTopBarModule({
+    //         submodules: [
+    //           new WithdrawalDrawerPseudoModule(),
+    //           new DepositFormPseudoModule({
+    //             submodules: [new CoinpaymentsDepositModule()],
+    //           }),
+    //           new TransferDrawerPseudoModule(),
+    //         ],
+    //       }),
+    //     ],
+    //   },
+    // ),
 
     new TradePageModule(
       {

@@ -85,6 +85,7 @@ export default {
     },
   },
   async created () {
+    console.log('1111')
     await this.loadBalances()
     this.isInitialized = true
   },

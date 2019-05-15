@@ -112,6 +112,25 @@ export function buildRouter (store) {
               },
             },
           },
+          {
+            path: '/movements',
+            name: vueRoutes.movements.name,
+            component: _ => import('@/vue/pages/Movements'),
+            meta: {
+              pageNameTranslationId: 'pages-names.movements',
+              featureWhiteList: [
+                { name: 'reg.mv.movements-top-bar' },
+                { name: 'reg.mv.movements-history' },
+                { name: 'reg.mv.withdraw-form' },
+                { name: 'reg.mv.deposit-form' },
+                { name: 'reg.mv.transfer-form' },
+              ],
+              sidebar: {
+                menuButtonTranslationId: 'pages-names.movements',
+                menuButtonMdiName: 'menu',
+              },
+            },
+          },
         ],
       },
     ],

@@ -106,6 +106,8 @@ import { vuexTypes } from '@/vuex'
 import Loader from '@/vue/common/Loader'
 import Drawer from '@/vue/common/Drawer'
 
+import MovementsHistory from '@/vue/modules/movements-history/async'
+
 const REFS = {
   movementsHistory: 'movements-history',
 }
@@ -117,7 +119,8 @@ export default {
     'chart': _ => import('@/vue/common/chart/Chart'),
     'transfer-form': _ => import('@/vue/forms/TransferForm'),
     'issuance-form': _ => import('@/vue/modules/issuance-form'),
-    'movements-history': _ => import('@/vue/modules/movements-history'),
+    // 'movements-history': _ => import('@/vue/modules/movements-history'),
+    MovementsHistory,
     Loader,
     Drawer,
   },

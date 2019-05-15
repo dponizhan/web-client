@@ -1,16 +1,14 @@
 <template>
   <div class="movements">
-    <template v-if="getModule().canRenderSubmodule(MovementsTopBarModule)">
-      <submodule-importer
-        :submodule="getModule().getSubmodule(MovementsTopBarModule)"
+    <template v-if="isComponentAllowed('reg.mv.movements-top-bar')">
+      <movements-top-bar
         @asset-updated="updateAsset"
         @movements-update-required="updateList"
       />
     </template>
 
-    <template v-if="getModule().canRenderSubmodule(MovementsTopBarReitModule)">
-      <submodule-importer
-        :submodule="getModule().getSubmodule(MovementsTopBarReitModule)"
+    <template v-if="isComponentAllowed('reg.mv.movements-top-bar-reit')">
+      <movements-top-bar-reit
         :config="movementsTopBarReitConfig"
         @asset-updated="updateAsset"
         @withdrawn="withdrawalFiatModuleWithdrawn"
@@ -19,18 +17,12 @@
       />
     </template>
 
-    <template v-if="getModule().canRenderSubmodule(MovementsHistoryModule)">
-      <submodule-importer
+    <template v-if="isComponentAllowed('reg.mv.movements-history')">
+      <movements-history
         v-if="asset.code"
-        :submodule="getModule().getSubmodule(MovementsHistoryModule)"
         :asset-code="asset.code"
         :key="`movements-history-state-${historyState}`"
-      >
-        <loader
-          slot="loader"
-          message-id="op-pages.assets-loading-msg"
-        />
-      </submodule-importer>
+      />
 
       <no-data-message
         v-else-if="isLoadFailed"
@@ -52,23 +44,19 @@ import Loader from '@/vue/common/Loader'
 import NoDataMessage from '@/vue/common/NoDataMessage'
 
 import config from '@/config'
-import SubmoduleImporter from '@/modules-arch/submodule-importer'
-import { MovementsHistoryModule } from '@/vue/modules/movements-history/module'
-import { MovementsTopBarModule } from '@modules/movements-top-bar/module'
-import { MovementsTopBarReitModule } from '@modules/movements-top-bar-reit/module'
 
 export default {
   name: 'movements-page',
   components: {
     Loader,
     NoDataMessage,
-    SubmoduleImporter,
+    'movements-history': _ => import('@/vue/modules/movements-history'),
+    'movements-top-bar': _ => import('@modules/movements-top-bar'),
+    // TODO: movements-top-bar-reit
+    'movements-top-bar-reit': _ => import('@modules/movements-top-bar-reit'),
   },
 
   data: _ => ({
-    MovementsHistoryModule,
-    MovementsTopBarModule,
-    MovementsTopBarReitModule,
     asset: {},
     isLoadFailed: false,
     movementsTopBarReitConfig: {
