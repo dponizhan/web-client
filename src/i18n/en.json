@@ -105,7 +105,8 @@
       "field-error_hardCapLessThanSoftCap": "Hard cap cannot be less than \"Soft cap\" value. Soft cap: {{softCap}}",
       "field-error_noMoreThanSaleCap": "Investing amount has exceeded the sale cap {{saleCap, money}}",
       "field-error_maxForIssuance": "Max amount for issuance: {{to, money}}",
-      "field-error_minForIssuance": "Min amount for issuance: {{from, money}}"
+      "field-error_minForIssuance": "Min amount for issuance: {{from, money}}",
+      "field-error_between": "Numbers between 0 and 6 are accepted"
     },
     "errors": {
       "default": "Something bad happened. Please try again later",
@@ -1118,7 +1119,8 @@
       "terms-lbl": "Upload terms",
       "terms-note": "JPG, PNG, PDF, max 5 mb.",
       "request-submitted-msg": "Your request was successfully processed. Please, wait for approval",
-      "pre-issuance-guide-link": "Learn more about pre-issuance"
+      "pre-issuance-guide-link": "Learn more about pre-issuance",
+      "trailing-digits-count-lbl": "Trailing digits count"
     },
     "update-asset-form": {
       "loading-msg": "Loading…",
@@ -1220,7 +1222,8 @@
       "no-msg": "No",
       "cancellation-msg": "Are you sure to cancel the request?",
       "update-btn": "Update",
-      "cancel-btn": "CANCEL"
+      "cancel-btn": "CANCEL",
+      "trailing-digits-count-title": "Trailing digits count"
     },
     "update-asset-requests": {
       "update-asset-title": "Update asset",
@@ -1896,7 +1899,8 @@
       "terms-title": "Terms",
       "download-terms-btn": "Download terms",
       "already-in-your-balance-btn": "Already in your balances",
-      "owner-lbl": "Owner"
+      "owner-lbl": "Owner",
+      "trailing-digits-title": "Trailing digits count"
     },
     "create-opportunity": {
       "maturity-date": "Maturity Date",

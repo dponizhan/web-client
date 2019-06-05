@@ -15,6 +15,12 @@
         </tr>
 
         <tr>
+          <!-- eslint-disable-next-line max-len -->
+          <td>{{ 'create-asset-requests.trailing-digits-count-title' | globalize }}</td>
+          <td>{{ request.trailingDigitsCount }}</td>
+        </tr>
+
+        <tr>
           <td>{{ 'create-asset-requests.terms-title' | globalize }}</td>
           <td>
             <a

@@ -50,6 +50,14 @@
             </td>
           </tr>
           <tr>
+            <td>{{ 'assets.trailing-digits-title' | globalize }}</td>
+            <td>
+              {{
+                asset.trailingDigitsCount
+              }}
+            </td>
+          </tr>
+          <tr>
             <td>
               {{ 'assets.transferable-title' | globalize }}
             </td>

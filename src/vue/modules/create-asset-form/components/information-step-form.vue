@@ -60,6 +60,21 @@
 
     <div class="app__form-row">
       <div class="app__form-field">
+        <input-field
+          white-autofill
+          type="number"
+          v-model="form.trailingDigitsCount"
+          @blur="touchField('form.trailingDigitsCount')"
+          name="create-asset-trailing-digits-count"
+          :label="'create-asset-form.trailing-digits-count-lbl' | globalize"
+          :error-message="getFieldErrorMessage('form.trailingDigitsCount')"
+          :disabled="isDisableTrailingDigits"
+        />
+      </div>
+    </div>
+
+    <div class="app__form-row">
+      <div class="app__form-field">
         <select-field
           v-model="form.assetType"
           name="create-asset-type"
@@ -139,7 +154,7 @@ import { DocumentContainer } from '@/js/helpers/DocumentContainer'
 
 import { CreateAssetRequest } from '../wrappers/create-asset-request'
 
-import { required, amountRange, maxLength } from '@validators'
+import { required, amountRange, maxLength, between } from '@validators'
 
 import config from '@/config'
 
@@ -167,7 +182,9 @@ export default {
       logo: null,
       policies: 0,
       assetType: '',
+      trailingDigitsCount: '',
     },
+    isDisableTrailingDigits: false,
     MIN_AMOUNT: config.MIN_AMOUNT,
     MAX_AMOUNT: config.MAX_AMOUNT,
     ASSET_POLICIES,
@@ -193,6 +210,10 @@ export default {
         },
         assetType: {
           required,
+        },
+        trailingDigitsCount: {
+          required,
+          between: between(0, 6),
         },
       },
     }
@@ -220,6 +241,7 @@ export default {
   created () {
     if (this.request) {
       this.populateForm()
+      this.isDisableTrailingDigits = true
     }
   },
 
@@ -230,6 +252,7 @@ export default {
         code: this.request.assetCode,
         assetType: this.request.assetType,
         maxIssuanceAmount: this.request.maxIssuanceAmount,
+        trailingDigitsCount: this.request.trailingDigitsCount,
         logo: this.request.logoKey
           ? new DocumentContainer(this.request.logo)
           : null,

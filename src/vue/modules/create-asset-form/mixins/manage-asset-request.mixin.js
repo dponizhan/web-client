@@ -37,7 +37,8 @@ export default {
         code: this.informationStepForm.code,
         assetType: String(this.informationStepForm.assetType),
         preissuedAssetSigner: this.preIssuanceAssetSigner,
-        trailingDigitsCount: config.DECIMAL_POINTS,
+        trailingDigitsCount: +this.informationStepForm.trailingDigitsCount ||
+          config.DECIMAL_POINTS,
         initialPreissuedAmount: this.initialPreissuedAmount,
         maxIssuanceAmount: this.informationStepForm.maxIssuanceAmount,
         policies: this.informationStepForm.policies,
