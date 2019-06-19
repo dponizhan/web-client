@@ -1,6 +1,6 @@
 <template>
   <div class="assets-renderer">
-    <template v-if="!isLoadFailed">
+    <template>
       <drawer :is-shown.sync="isDrawerShown">
         <template v-if="isUpdateMode">
           <template slot="heading">
@@ -20,6 +20,7 @@
 
           <asset-attributes-viewer
             :asset="selectedAsset"
+            :balance="selectedBalance"
             :kyc-required-asset-type="kycRequiredAssetType"
             :security-asset-type="securityAssetType"
           />
@@ -43,20 +44,26 @@
 
       <div class="assets-renderer__asset-list-wrp">
         <div
-          v-if="assets.length"
           class="assets-renderer__asset-list"
         >
           <template v-for="asset in assets">
             <card-viewer
               :asset="asset"
+              :balance="getAssetBalance(asset)"
               :key="asset.code"
               @click="selectAsset(asset)"
+            />
+          </template>
+          <template v-for="index in itemsPerSkeletonLoader">
+            <asset-skeleton-loader
+              v-if="!isLoaded && !assets.length"
+              :key="index"
             />
           </template>
         </div>
 
         <no-data-message
-          v-else
+          v-if="isLoaded && !assets.length"
           icon-name="trending-up"
           :title="'assets.no-assets-title' | globalize"
           :message="'assets.no-assets-msg' | globalize"
@@ -79,6 +86,7 @@ import NoDataMessage from '@/vue/common/NoDataMessage'
 import CardViewer from '../../shared/components/card-viewer'
 import AssetAttributesViewer from '../../shared/components/asset-attributes-viewer'
 import AssetActions from './asset-actions'
+import AssetSkeletonLoader from './asset-skeleton-loader'
 
 import UpdateAssetFormModule from '@modules/update-asset-form'
 
@@ -97,6 +105,7 @@ export default {
     AssetAttributesViewer,
     AssetActions,
     UpdateAssetFormModule,
+    AssetSkeletonLoader,
   },
 
   props: {
@@ -123,26 +132,35 @@ export default {
   },
 
   data: _ => ({
-    isLoaded: true,
+    isLoaded: false,
     isLoadFailed: false,
     isDrawerShown: false,
     isUpdateMode: false,
     selectedAsset: {},
+    itemsPerSkeletonLoader: 3,
   }),
 
   computed: {
     ...mapGetters({
       assets: vuexTypes.assets,
+      accountBalances: vuexTypes.accountBalances,
     }),
     ...mapGetters('asset-explorer', {
       kycRequiredAssetType: types.kycRequiredAssetType,
       securityAssetType: types.securityAssetType,
     }),
+
+    selectedBalance (asset) {
+      const record = this.accountBalances
+        .find(item => item.asset.code === this.selectedAsset.code)
+      return record ? record.balance : ''
+    },
   },
 
   async created () {
     try {
       await this.loadAssets()
+      this.isLoaded = true
     } catch (e) {
       this.isLoadFailed = true
       ErrorHandler.processWithoutFeedback()
@@ -158,6 +176,12 @@ export default {
       this.selectedAsset = asset
       this.isUpdateMode = false
       this.isDrawerShown = true
+    },
+
+    getAssetBalance (asset) {
+      const balanceRecord = this.accountBalances
+        .find(b => b.asset.code === asset.code)
+      return balanceRecord ? balanceRecord.balance : ''
     },
   },
 }

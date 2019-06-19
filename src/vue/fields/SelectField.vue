@@ -3,7 +3,8 @@
     class="select-field"
     :class="{
       'select-field--error': errorMessage,
-      'select-field--disabled': $attrs.disabled
+      'select-field--disabled': $attrs.disabled,
+      'select-field--readonly': $attrs.readonly,
     }"
   >
     <template v-if="label">
@@ -18,11 +19,8 @@
     <select
       :id="`select-${_uid}`"
       class="select-field__select"
-      :disabled="$attrs.disabled"
-      :name="$attrs.name"
       :value="value"
-      :required="$attrs.required"
-      :autofocus="$attrs.autofocus"
+      v-bind="$attrs"
       @change="onChange"
     >
       <slot />
@@ -91,6 +89,10 @@ export default {
     if (this.customSelectInstance && this.customSelectInstance.container) {
       this.addCustomSelectEvents()
     }
+
+    if (!this.value) {
+      this.fixDisplayOfEmptyValue()
+    }
   },
 
   beforeDestroy () {
@@ -130,6 +132,21 @@ export default {
         'keydown',
       )
     },
+
+    // Design requires select fields be displayed with the same height
+    // whether the field filled out or not. When there is no value, the field
+    // has no content to stretch the field, so we need to add a non-breakable
+    // space manually. We cannot add an <option> with empty value cuz it
+    // produces an additional unneeded option be rendered. If we add anything
+    // except of &nbsp; that 'anything' will overlap field’s label.
+    fixDisplayOfEmptyValue () {
+      const opener = document
+        .querySelector(`.${CUSTOM_SELECT_CONFIG.openerClass} > span`)
+
+      if (opener) {
+        opener.innerHTML = '&nbsp;'
+      }
+    },
   },
 }
 </script>
@@ -157,8 +174,7 @@ export default {
   background: none;
   border: none;
   padding: $field-input-padding;
-  padding-right: 3.2rem;
-  height: 4rem;
+  padding-right: 2.4rem;
 
   @include material-border(
     $field-color-focused,
@@ -166,17 +182,17 @@ export default {
     '&.select-field__option--focused'
   );
 
-  .select-field--disabled & {
+  .select-field--disabled > .select-field__wrp > &,
+  .select-field--readonly > .select-field__wrp > & {
     cursor: default;
     pointer-events: none;
+    color: $field-color-unfocused;
 
     @include readonly-material-border($field-color-unfocused);
   }
 }
 
 .select-field__opener span {
-  color: $field-color-text;
-
   @include text-font-sizes;
 }
 
@@ -261,13 +277,20 @@ export default {
   &:before {
     transition: transform 0.2s ease-out;
   }
+
+  .select-field--disabled > &,
+  .select-field--readonly > & {
+    filter: grayscale(100%);
+    color: $field-color-unfocused;
+  }
 }
 
 .select-field__selected-icon--active:before {
   transform: rotate(-180deg);
 }
 
-.select-field--disabled {
+.select-field--disabled,
+.select-field--readonly {
   filter: grayscale(100%);
 }
 

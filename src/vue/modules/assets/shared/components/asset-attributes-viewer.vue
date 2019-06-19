@@ -148,8 +148,6 @@ import TermsViewer from './terms-viewer'
 import EmailGetter from '@/vue/common/EmailGetter'
 
 import { AssetRecord } from '@/js/records/entities/asset.record'
-import { mapGetters } from 'vuex'
-import { vuexTypes } from '@/vuex'
 
 export default {
   name: 'asset-attributes-viewer',
@@ -160,16 +158,9 @@ export default {
   },
   props: {
     asset: { type: AssetRecord, required: true },
+    balance: { type: String, default: '' },
     kycRequiredAssetType: { type: Number, required: true },
     securityAssetType: { type: Number, required: true },
-  },
-  computed: {
-    ...mapGetters({
-      getAssetByCode: vuexTypes.assetByCode,
-    }),
-    balance () {
-      return this.getAssetByCode(this.asset.code).balance
-    },
   },
 }
 </script>

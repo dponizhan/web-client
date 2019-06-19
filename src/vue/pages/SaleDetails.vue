@@ -11,7 +11,10 @@
             <span>{{ 'sale-details.investable-sales-tab' | globalize }}</span>
           </router-link>
 
-          <router-link :to="vueRoutes.userOwnedSales">
+          <router-link
+            v-if="isAccountCorporate"
+            :to="vueRoutes.userOwnedSales"
+          >
             <span>{{ 'sales.my-sales' | globalize }}</span>
           </router-link>
 
@@ -52,15 +55,15 @@
     </template>
 
     <template v-else>
-      <loader message-id="sale-details.loading-msg" />
+      <sale-details-skeleton-loader />
     </template>
   </div>
 </template>
 
 <script>
 import TopBar from '@/vue/common/TopBar'
-import Loader from '@/vue/common/Loader'
 import NoDataMessage from '@/vue/common/NoDataMessage'
+import SaleDetailsSkeletonLoader from './SaleDetailsSkeletonLoader'
 
 import { SaleRecord } from '@/js/records/entities/sale.record'
 
@@ -71,12 +74,15 @@ import { errors } from '@/js/errors'
 
 import { vueRoutes } from '@/vue-router/routes'
 
+import { mapGetters } from 'vuex'
+import { vuexTypes } from '@/vuex'
+
 export default {
   name: 'sale-details',
   components: {
     TopBar,
-    Loader,
     NoDataMessage,
+    SaleDetailsSkeletonLoader,
   },
 
   props: {
@@ -89,6 +95,12 @@ export default {
     isLoadingFailed: false,
     vueRoutes,
   }),
+
+  computed: {
+    ...mapGetters({
+      isAccountCorporate: vuexTypes.isAccountCorporate,
+    }),
+  },
 
   async created () {
     await this.loadSale(this.id)

@@ -2,7 +2,6 @@
   <div class="sales-list">
     <div class="sales__state-filter">
       <select-field
-        :disabled="!isLoaded"
         v-model="filters.state"
         class="sales-asset-selector__field app__select app__select--no-border"
       >
@@ -15,7 +14,7 @@
         </option>
       </select-field>
     </div>
-    <template v-if="filteredSales.length">
+    <template>
       <div class="sales__sale-cards">
         <drawer :is-shown.sync="isDetailsDrawerShown">
           <template slot="heading">
@@ -31,19 +30,22 @@
             :sale="sale"
           />
         </template>
+        <template v-for="index in itemsPerSkeletonLoader">
+          <sale-skeleton-loader
+            class="sales__sale-card"
+            v-if="!isLoaded && !filteredSales.length"
+            :key="`skeleton-loader-${index}`"
+          />
+        </template>
       </div>
     </template>
 
-    <template v-else-if="isLoaded">
+    <template v-if="isLoaded && !filteredSales.length">
       <no-data-message
         icon-name="inbox"
         :title="'sales.no-sales-title' | globalize"
         :message="'sales.no-sales-desc' | globalize"
       />
-    </template>
-
-    <template v-else>
-      <loader :message-id="'sales.loading-msg'" />
     </template>
 
     <!--
@@ -62,13 +64,13 @@
 
 <script>
 import Drawer from '@/vue/common/Drawer'
-import Loader from '@/vue/common/Loader'
 import CollectionLoader from '@/vue/common/CollectionLoader'
 import NoDataMessage from '@/vue/common/NoDataMessage'
 import SelectField from '@/vue/fields/SelectField'
 
 import SaleOverview from '@/vue/pages/sales/SaleOverview'
 import SaleCard from '@/vue/pages/sales/SaleCard'
+import SaleSkeletonLoader from './SaleSkeletonLoader'
 
 import { api } from '@/api'
 import { vueRoutes } from '@/vue-router/routes'
@@ -97,12 +99,12 @@ export default {
   name: 'sales-list',
   components: {
     Drawer,
-    Loader,
     CollectionLoader,
     NoDataMessage,
     SaleOverview,
     SaleCard,
     SelectField,
+    SaleSkeletonLoader,
   },
   props: {
     isUserSales: {
@@ -120,6 +122,7 @@ export default {
     isLoaded: false,
     isDetailsDrawerShown: false,
     selectedSale: null,
+    itemsPerSkeletonLoader: 3,
     SALE_STATES,
     vueRoutes,
   }),

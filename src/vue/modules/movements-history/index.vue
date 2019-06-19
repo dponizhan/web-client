@@ -1,26 +1,26 @@
 <template>
   <div class="movements-history">
-    <template v-if="isInitialized && assetCode">
-      <template v-if="isMovementsLoaded">
+    <template>
+      <template>
         <h2 class="app__table-title" v-if="latestActivity">
           {{ 'movements-history.latest-activity' | globalize }}
         </h2>
         <div class="movements-history__list-wrp">
-          <movements-table :movements="movements" />
+          <movements-table
+            :is-movements-loaded="isMovementsLoaded"
+            :movements="movements"
+          />
         </div>
       </template>
-      <template v-else-if="isMovementsLoadFailed">
+      <template v-if="isMovementsLoadFailed">
         <p class="movements-history__error-msg">
           {{ 'movements-history.movements-load-failed-msg' | globalize }}
         </p>
       </template>
-      <template v-else>
-        <load-spinner message-id="movements-history.loading-movements-msg" />
-      </template>
 
       <div class="movements-history__collection-loader-wrp">
         <collection-loader
-          v-if="!isMovementsLoadFailed"
+          v-if="!isMovementsLoadFailed && assetCode"
           v-show="isMovementsLoaded && !latestActivity"
           :first-page-loader="firstPageLoader"
           @first-page-load="setMovements"
@@ -29,21 +29,17 @@
         />
       </div>
     </template>
-
-    <template v-else>
-      <load-spinner message-id="movements-history.initializing-msg" />
-    </template>
   </div>
 </template>
 
 <script>
 import CollectionLoader from '@/vue/common/CollectionLoader'
 import MovementsTable from './components/movements-table'
-import LoadSpinner from '@/vue/common/Loader'
 
 import { mapActions, mapMutations, mapGetters } from 'vuex'
 import { ErrorHandler } from '@/js/helpers/error-handler'
 import { types } from './store/types'
+import { vueRoutes } from '@/vue-router/routes'
 
 const REFS = {
   collectionLoader: 'collection-loader',
@@ -52,7 +48,6 @@ const REFS = {
 export default {
   name: 'movements-history-module',
   components: {
-    LoadSpinner,
     MovementsTable,
     CollectionLoader,
   },
@@ -67,14 +62,12 @@ export default {
     },
   },
   data: _ => ({
-    isInitialized: false,
     isMovementsLoaded: false,
     isMovementsLoadFailed: false,
     REFS,
   }),
   computed: {
     ...mapGetters('movements-history', {
-      balances: types.balances,
       movements: types.movements,
     }),
     firstPageLoader () {
@@ -83,11 +76,12 @@ export default {
 
       return _ => this.loadMovementsFirstPage(assetCode)
     },
+
+    isSharesPage () {
+      return this.$route.name === vueRoutes.registerOfShares.name
+    },
   },
-  async created () {
-    await this.loadBalances()
-    this.isInitialized = true
-  },
+
   methods: {
     ...mapMutations('movements-history', {
       setMovements: types.SET_MOVEMENTS,
@@ -95,7 +89,7 @@ export default {
     }),
     ...mapActions('movements-history', {
       loadMovements: types.LOAD_MOVEMENTS,
-      loadBalances: types.LOAD_BALANCES,
+      loadShareMovements: types.LOAD_SHARE_MOVEMENTS,
     }),
 
     reloadCollectionLoader () {
@@ -105,7 +99,12 @@ export default {
     async loadMovementsFirstPage (assetCode) {
       this.isMovementsLoaded = false
       try {
-        const response = await this.loadMovements(assetCode)
+        let response
+        if (this.isSharesPage) {
+          response = await this.loadShareMovements(assetCode)
+        } else {
+          response = await this.loadMovements(assetCode)
+        }
         this.isMovementsLoaded = true
         return response
       } catch (e) {

@@ -26,9 +26,7 @@
             </th>
           </tr>
         </thead>
-        <tbody
-          v-if="fees.length"
-        >
+        <tbody v-if="isLoaded && fees.length">
           <tr
             v-for="(fee, i) in fees"
             :key="i"
@@ -61,9 +59,7 @@
             </td>
           </tr>
         </tbody>
-        <tbody
-          v-else
-        >
+        <tbody v-else-if="isLoaded">
           <tr>
             <td
               class="fees-table__empty-list-placeholder"
@@ -74,6 +70,11 @@
             </td>
           </tr>
         </tbody>
+
+        <skeleton-loader-table-body
+          v-else
+          :cells="6"
+        />
       </table>
     </div>
   </div>
@@ -82,12 +83,14 @@
 <script>
 import FeeTypeViewer from './viewers/fee-type-viewer'
 import FeeSubtypeViewer from './viewers/fee-subtype-viewer'
+import SkeletonLoaderTableBody from '@/vue/common/skeleton-loader/SkeletonLoaderTableBody'
 
 export default {
   name: 'fees-table',
   components: {
     FeeTypeViewer,
     FeeSubtypeViewer,
+    SkeletonLoaderTableBody,
   },
 
   props: {
@@ -98,6 +101,10 @@ export default {
     assetCode: {
       type: String,
       default: '',
+    },
+    isLoaded: {
+      type: Boolean,
+      require: true,
     },
   },
 }

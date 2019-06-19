@@ -119,7 +119,7 @@
             <input-field
               white-autofill
               type="number"
-              :min="minAmount"
+              :min="0"
               :max="maxAmount"
               :step="minAmount"
               v-model="form.information.maxIssuanceAmount"
@@ -264,7 +264,7 @@
               type="number"
               v-model="form.saleInformation.softCap"
               :min="minAmount"
-              :max="form.saleInformation.hardCap || maxAmount"
+              :max="maxAmount"
               :step="minAmount"
               @blur="touchField('form.saleInformation.softCap')"
               name="create-sale-soft-cap"
@@ -287,7 +287,7 @@
               white-autofill
               type="number"
               v-model="form.saleInformation.hardCap"
-              :min="form.saleInformation.softCap"
+              :min="0"
               :max="maxAmount"
               :step="minAmount"
               @blur="touchField('form.saleInformation.hardCap')"
@@ -662,7 +662,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      baseAssets: vuexTypes.balancesAssets,
+      baseAssets: vuexTypes.fiatAssets,
       assets: vuexTypes.assets,
       statsQuoteAsset: vuexTypes.statsQuoteAsset,
     }),
@@ -715,10 +715,12 @@ export default {
   methods: {
     moment,
     formatDate,
+    ...mapActions({
+      loadAssets: vuexTypes.LOAD_ASSETS,
+    }),
     ...mapActions('create-opportunity', {
       loadKvAssetTypeKycRequired: types.LOAD_KV_KYC_REQUIRED,
       getBlobId: types.LOAD_BLOB_ID,
-      loadAssets: types.LOAD_ASSETS,
       loadBaseAssetsPairs: types.LOAD_BASE_ASSETS_PAIRS_BY_STATS_QUOTE_ASSET,
     }),
     nextStep (formStep) {

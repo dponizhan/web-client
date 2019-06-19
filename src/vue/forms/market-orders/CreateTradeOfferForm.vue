@@ -28,7 +28,7 @@
           v-model.trim="form.price"
           name="trade-offer-price"
           type="number"
-          :min="config.MIN_AMOUNT"
+          :min="0"
           :max="config.MAX_AMOUNT"
           :step="config.MIN_AMOUNT"
           :label="
@@ -56,7 +56,7 @@
           v-model.trim="form.amount"
           name="trade-offer-amount"
           type="number"
-          :min="config.MIN_AMOUNT"
+          :min="0"
           :max="config.MAX_AMOUNT"
           :step="config.MIN_AMOUNT"
           :label="'create-trade-offer-form.amount-lbl' | globalize({
@@ -135,16 +135,17 @@
       </div>
     </template>
   </form>
-
-  <loader v-else message-id="create-trade-offer-form.loading-msg" />
+  <skeleton-loader-offer-form
+    v-else
+  />
 </template>
 
 <script>
 import debounce from 'lodash/debounce'
 
 import ReadonlyField from '@/vue/fields/ReadonlyField'
+import SkeletonLoaderOfferForm from './SkeletonLoaderOfferForm'
 import FeesRenderer from '@/vue/common/fees/FeesRenderer'
-import Loader from '@/vue/common/Loader'
 
 import FormMixin from '@/vue/mixins/form.mixin'
 import OfferManagerMixin from '@/vue/mixins/offer-manager.mixin'
@@ -175,8 +176,8 @@ export default {
   name: 'create-trade-offer-form',
   components: {
     ReadonlyField,
+    SkeletonLoaderOfferForm,
     FeesRenderer,
-    Loader,
   },
   mixins: [
     FormMixin,
