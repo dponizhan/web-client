@@ -8,7 +8,7 @@
 import { vueRoutes } from '@/vue-router/routes'
 import { SchemeRegistry } from '@/modules-arch/scheme-registry'
 
-const DEFAULT_LOGO_URL = '/static/logo.svg'
+const DEFAULT_LOGO_URL = '/static/logo.png'
 
 export default {
   data: _ => ({

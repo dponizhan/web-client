@@ -1,4 +1,4 @@
-const COLOR_DEFAULT = 'rgba(58, 65, 128, .2)'
+const COLOR_DEFAULT = 'rgba(214, 99, 38, 0.4)'
 const DURATION_DEFAULT = 500
 
 export const ripple = {
