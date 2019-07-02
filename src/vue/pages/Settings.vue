@@ -14,6 +14,7 @@
         >
           <span>{{ 'settings-page.security-tab' | globalize }}</span>
         </router-link>
+        <language-select />
       </template>
     </top-bar>
     <router-view />
@@ -22,6 +23,7 @@
 
 <script>
 import TopBar from '@/vue/common/TopBar'
+import LanguageSelect from '@/vue/common/LanguageSelect'
 
 import { vueRoutes } from '@/vue-router/routes'
 
@@ -36,6 +38,7 @@ export default {
   name: 'settings',
   components: {
     TopBar,
+    LanguageSelect,
   },
   data: _ => ({
     vueRoutes,

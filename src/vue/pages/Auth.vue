@@ -17,7 +17,10 @@
       </template>
     </div>
     <div class="auth__form">
-      <logo class="auth__logo" />
+      <div class="auth__top">
+        <logo class="auth__logo" />
+        <language-select />
+      </div>
 
       <div class="auth__idle-message-wrp">
         <idle-message />
@@ -36,6 +39,7 @@
 import Logo from '../assets/Logo'
 import IdleMessage from '@/vue/common/IdleMessage'
 import AppFooter from '@/vue/navigation/Footer'
+import LanguageSelect from '@/vue/common/LanguageSelect'
 import config from '@/config'
 
 export default {
@@ -44,6 +48,7 @@ export default {
     Logo,
     IdleMessage,
     AppFooter,
+    LanguageSelect,
   },
   data () {
     return {
@@ -150,5 +155,11 @@ export default {
 .auth__idle-message-wrp {
   margin-top: -6rem;
   margin-bottom: 4rem;
+}
+
+.auth__top {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 3rem;
 }
 </style>

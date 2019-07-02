@@ -4,8 +4,9 @@ import _isObject from 'lodash/isObject'
 import _merge from 'lodash/merge'
 
 import { MathUtil } from '@/js/utils'
+import { LANGUAGES } from './languages'
 
-function buildI18n (language, ...localesJson) {
+export function buildI18n (language, ...localesJson) {
   let result
   switch (language) {
     case 'en':
@@ -16,6 +17,14 @@ function buildI18n (language, ...localesJson) {
         ...localesJson
       )
       break
+    case 'ru':
+      result = _merge(
+        require(`./ru`),
+        require(`./ru.terms`),
+        require(`./ru.pre-issuance-guide`),
+        ...localesJson
+      )
+      break
     default:
       throw new Error('Locale not found')
   }
@@ -23,7 +32,7 @@ function buildI18n (language, ...localesJson) {
   return result
 }
 
-function buildI18nOptions (language, i18n) {
+export function buildI18nOptions (language, i18n) {
   return {
     lng: language,
     debug: false,
@@ -33,8 +42,13 @@ function buildI18nOptions (language, i18n) {
           ...i18n.translations,
         },
       },
+      ru: {
+        translation: {
+          ...i18n.translations,
+        },
+      },
     },
-    whitelist: ['en'],
+    whitelist: ['en', 'ru'],
     // set to true if you need en-US/en-UK lng's:
     nonExplicitWhitelist: false,
     interpolation: {
@@ -75,7 +89,21 @@ function buildI18nOptions (language, i18n) {
   }
 }
 
-const lang = 'en'
+let lang = LANGUAGES[0]
+if (localStorage.language) {
+  lang = localStorage.language
+} else {
+  let language = window.navigator ? (window.navigator.language ||
+    window.navigator.systemLanguage ||
+    window.navigator.userLanguage) : LANGUAGES[0]
+  language = language.substr(0, 2).toLowerCase()
+  if (LANGUAGES.find(item => item === language)) {
+    lang = language
+    localStorage.language = language
+  } else {
+    localStorage.language = lang
+  }
+}
 export const i18nOptions = buildI18nOptions(
   lang,
   buildI18n(lang)

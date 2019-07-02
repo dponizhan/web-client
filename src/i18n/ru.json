@@ -675,10 +675,10 @@
       "submit-processing": "Processing..."
     },
     "pages-names": {
-      "dashboard": "Dashboard",
-      "limits": "Limits",
-      "assets": "Assets",
-      "requests": "Requests",
+      "dashboard": "Главная",
+      "limits": "Лимиты",
+      "assets": "Активы",
+      "requests": "Запросы",
       "trade": "Trade",
       "settings": "Settings",
       "fees": "Fees",
