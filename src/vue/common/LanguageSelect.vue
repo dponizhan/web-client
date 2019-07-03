@@ -1,8 +1,9 @@
 <template>
   <div>
     <select-field
+      v-if="!isShowConfirmation"
       :value="language"
-      @input="setLanguage"
+      @input="selectLanguage"
       class="app__select app__select--no-border"
     >
       <option
@@ -13,21 +14,33 @@
         {{ lang }}
       </option>
     </select-field>
+    <template v-else>
+      <form-confirmation
+        :message-id="'language-select.experimental-feature' | globalize"
+        @ok="setLanguage()"
+        @cancel="isShowConfirmation = false"
+      />
+    </template>
   </div>
 </template>
 
 <script>
 import SelectField from '@/vue/fields/SelectField'
+import FormConfirmation from './FormConfirmation'
+
 import { LANGUAGES } from '@/i18n/languages'
 export default {
   name: 'language-select',
   components: {
     SelectField,
+    FormConfirmation,
   },
   data () {
     return {
       LANGUAGES,
       language: LANGUAGES[0],
+      temporaryLanguage: '',
+      isShowConfirmation: false,
     }
   },
   created () {
@@ -36,10 +49,21 @@ export default {
     }
   },
   methods: {
-    setLanguage (value) {
-      this.language = value
+    setLanguage () {
+      this.language = this.temporaryLanguage
       localStorage.language = this.language
       location.reload()
+      this.isShowConfirmation = false
+    },
+    selectLanguage (value) {
+      if (value === 'ru') {
+        this.temporaryLanguage = value
+        this.isShowConfirmation = true
+      } else {
+        this.language = value
+        localStorage.language = this.language
+        location.reload()
+      }
     },
   },
 }

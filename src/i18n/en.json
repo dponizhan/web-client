@@ -507,8 +507,7 @@
       "network-passphrase-title": "Network passphrase",
       "view-network-passphrase-btn": "View network passphrase",
       "network-passphrase-desc": "Network passphrase is a sequence of words or other text used to control access to a system",
-      "account-id-label": "Account ID",
-      "language": "Language"
+      "account-id-label": "Account ID"
     },
     "tfa-form": {
       "password-lbl": "Current password",
@@ -2305,6 +2304,9 @@
     },
     "atomic-swaps-explore": {
       "no-list-title":"Atomic swaps will be coming soon"
+    },
+    "language-select": {
+      "experimental-feature": "This is an experimental feature."
     }
   }
 }

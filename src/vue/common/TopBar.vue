@@ -67,6 +67,7 @@ export default {
 
 .top-bar__main {
   display: flex;
+  align-items: center;
 }
 
 .top-bar__main a {

@@ -8,7 +8,7 @@
 import { vueRoutes } from '@/vue-router/routes'
 import { SchemeRegistry } from '@/modules-arch/scheme-registry'
 
-const DEFAULT_LOGO_URL = '/static/logo.png'
+const DEFAULT_LOGO_URL = '/static/logo.svg'
 
 export default {
   data: _ => ({
@@ -25,6 +25,7 @@ export default {
 
 <style lang="scss">
 .logotype img {
-  max-height: 4.5rem;
+  width: 9.5rem;
+  max-height: 5.5rem;
 }
 </style>
